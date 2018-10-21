@@ -232,6 +232,36 @@ Set-AzureRmVMExtension `
      -Location "japaneast"
 Write-Host "Installing IIS on VM 2-SUCCESS"
 
+
+$ProtectedSettings = @{"patToken" = "aextoecg27fjfokbg5lv62uiygsk27wyyjjrx7iih6tqv2unhlsa" ;}
+$settings = @{"VSTSAccountName" = "https://kumarsu8.visualstudio.com/"; `
+               "TeamProject" = "Deploy 2 VM with LoadBalancer"; `
+               "DeploymentGroup" = "Demonstration1"; }
+ 
+Write-Host "Installing Deployment Agent on VM 1"
+Set-AzureRmVMExtension `
+     -ResourceGroupName Demonstration1 `
+     -ExtensionName "TeamServicesAgent" `
+     -VMName INCHNVMW201601 `
+     -Publisher Microsoft.VisualStudio.Services `
+     -ExtensionType TeamServicesAgent `
+     -TypeHandlerVersion 1.0 `
+     -Location "japaneast" `
+     -Settings $settings `
+     -ProtectedSettings $ProtectedSettings
+Write-Host "Deployment Agent on VM 1.......-SUCCESS"
+Write-Host "Installing Deployment Agent on VM 2"
+Set-AzureRmVMExtension `
+     -ResourceGroupName Demonstration1 `
+     -ExtensionName "TeamServicesAgent" `
+     -VMName INCHNVMW201602 `
+     -Publisher Microsoft.VisualStudio.Services `
+     -ExtensionType TeamServicesAgent `
+     -TypeHandlerVersion 1.0 `
+     -Location "japaneast" `
+     -Settings $settings `
+     -ProtectedSettings $ProtectedSettings
+Write-Host "Deployment Agent on VM 2.......-SUCCESS"
 Get-AzureRmPublicIPAddress `
   -ResourceGroupName $ResourceGroupName `
   -Name "Demonstration1-lbpip3" | select IpAddress
