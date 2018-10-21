@@ -100,24 +100,34 @@ $pip2 = New-AzureRmPublicIpAddress -ResourceGroupName $ResourceGroupName `
 Write-Host "Public IDs Created..................."
 
 Write-Host "Opening port 80..................."
-# Create an inbound network security group rule for port 3389
+# Create an inbound network security group rule for port 80
 $nsgRuleRDP = New-AzureRmNetworkSecurityRuleConfig -Name Port_80 -Protocol Tcp `
                                                    -Direction Inbound `
-                                                   -Priority 1000 `
+                                                   -Priority 101 `
                                                    -SourceAddressPrefix * `
                                                    -SourcePortRange * `
                                                    -DestinationAddressPrefix * `
                                                    -DestinationPortRange 80 `
                                                    -Access Allow
 Write-Host "Port 80 open -Success..................."
-
+Write-Host "Opening port 80..................."
+# Create an inbound network security group rule for port 3389
+$nsgRuleRDP1 = New-AzureRmNetworkSecurityRuleConfig -Name Port_3389 -Protocol Tcp `
+                                                   -Direction Inbound `
+                                                   -Priority 100 `
+                                                   -SourceAddressPrefix * `
+                                                   -SourcePortRange * `
+                                                   -DestinationAddressPrefix * `
+                                                   -DestinationPortRange 3389 `
+                                                   -Access Allow
+Write-Host "Port 80 open -Success..................."
 
 Write-Host "Create Network Security Group..................."
 # Create a network security group
 $nsg = New-AzureRmNetworkSecurityGroup -ResourceGroupName $ResourceGroupName `
                                        -Location $location `
                                        -Name $NsgName `
-                                       -SecurityRules $nsgRuleRDP
+                                       -SecurityRules $nsgRuleRDP , $nsgRuleRDP1
 Write-Host "Network Security Group Created-Success..........."
 
 Write-Host "Create 2 NICs.........."
